@@ -1,4 +1,4 @@
-package hakase.com.remoteBag.chunk;
+package aisuu.com.remoteBag.chunk;
 
 import java.util.List;
 

@@ -1,6 +1,4 @@
-package hakase.com.remoteBag.chunk;
-
-import hakase.com.remoteBag.RemoteBagMod;
+package aisuu.com.remoteBag.chunk;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +6,7 @@ import java.util.Map;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
+import aisuu.com.remoteBag.RemoteBagMod;
 
 public class ChunkLoading {
 	public final int id;

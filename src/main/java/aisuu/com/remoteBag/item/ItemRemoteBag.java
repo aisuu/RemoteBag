@@ -1,9 +1,4 @@
-package hakase.com.remoteBag.item;
-
-import hakase.com.remoteBag.RemoteBagMod;
-import hakase.com.remoteBag.chunk.ChunkLoading;
-import hakase.com.remoteBag.util.Pos;
-import hakase.com.remoteBag.util.Util;
+package aisuu.com.remoteBag.item;
 
 import java.awt.Color;
 import java.util.List;
@@ -21,6 +16,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import aisuu.com.remoteBag.RemoteBagMod;
+import aisuu.com.remoteBag.chunk.ChunkLoading;
+import aisuu.com.remoteBag.util.Pos;
+import aisuu.com.remoteBag.util.Util;
 import cpw.mods.ironchest.BlockIronChest;
 import cpw.mods.ironchest.TileEntityIronChest;
 

@@ -1,4 +1,4 @@
-package hakase.com.remoteBag.util;
+package aisuu.com.remoteBag.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

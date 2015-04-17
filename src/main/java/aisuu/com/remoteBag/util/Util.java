@@ -1,12 +1,12 @@
-package hakase.com.remoteBag.util;
+package aisuu.com.remoteBag.util;
 
-import hakase.com.remoteBag.network.PacketHandler;
-import hakase.com.remoteBag.network.message.MessageOpenGui;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import aisuu.com.remoteBag.network.PacketHandler;
+import aisuu.com.remoteBag.network.message.MessageOpenGui;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 

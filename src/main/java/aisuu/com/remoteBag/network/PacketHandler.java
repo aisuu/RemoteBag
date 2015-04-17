@@ -1,7 +1,7 @@
-package hakase.com.remoteBag.network;
+package aisuu.com.remoteBag.network;
 
-import hakase.com.remoteBag.RemoteBagMod;
-import hakase.com.remoteBag.network.message.MessageOpenGui;
+import aisuu.com.remoteBag.RemoteBagMod;
+import aisuu.com.remoteBag.network.message.MessageOpenGui;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;

@@ -1,4 +1,4 @@
-package hakase.com.remoteBag.network.message;
+package aisuu.com.remoteBag.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;

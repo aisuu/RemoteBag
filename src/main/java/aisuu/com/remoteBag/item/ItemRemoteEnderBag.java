@@ -1,12 +1,12 @@
-package hakase.com.remoteBag.item;
+package aisuu.com.remoteBag.item;
 
-import hakase.com.remoteBag.RemoteBagMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import aisuu.com.remoteBag.RemoteBagMod;
 
 public final class ItemRemoteEnderBag extends Item {
 

@@ -1,11 +1,5 @@
-package hakase.com.remoteBag;
+package aisuu.com.remoteBag;
 
-import hakase.com.remoteBag.chunk.ChunkLoadingCallback;
-import hakase.com.remoteBag.item.ItemRemoteBag;
-import hakase.com.remoteBag.item.ItemRemoteEnderBag;
-import hakase.com.remoteBag.network.PacketHandler;
-import hakase.com.remoteBag.util.Pos;
-import hakase.com.remoteBag.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.init.Blocks;
@@ -18,6 +12,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import aisuu.com.remoteBag.chunk.ChunkLoadingCallback;
+import aisuu.com.remoteBag.item.ItemRemoteBag;
+import aisuu.com.remoteBag.item.ItemRemoteEnderBag;
+import aisuu.com.remoteBag.network.PacketHandler;
+import aisuu.com.remoteBag.util.Pos;
+import aisuu.com.remoteBag.util.Util;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -38,7 +38,7 @@ public final class RemoteBagMod {
     public static Item itemRemoteEnderBag;
     public static Item itemRemoteBag;
 
-    // IronChestが導入されているか
+    /** IronChestが導入されているか */
     public static boolean isLoadedIronChest = false;
 
     @EventHandler
