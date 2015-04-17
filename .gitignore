@@ -46,3 +46,11 @@ eclipse/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
 eclipse/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat
 eclipse/.metadata/.plugins/org.eclipse.wst.jsdt.core/externalLibsTimeStamps
 eclipse/.metadata/.plugins/org.eclipse.wst.jsdt.core/variablesAndContainers.dat
+*.index
+*.class
+*.lang
+*.json
+eclipse/.metadata/version.ini
+*.default
+eclipse/.metadata/.plugins/org.eclipse.team.cvs.core/.running
+eclipse/.metadata/.plugins/org.eclipse.rse.core/initializerMarks/org.eclipse.rse.internal.core.RSELocalConnectionInitializer.mark
