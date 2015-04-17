@@ -36,6 +36,10 @@ public final class ItemRemoteBag extends Item {
         this.setMaxStackSize( 1 );
     }
 
+    /**
+     * プレイヤーが座標の設定されたアイテムを手に持っている場合
+     * その座標のチャンクをロードさせる処理。上手く読み込んでくれない。
+     */
 	@Override
 	public void onUpdate(ItemStack stack, World world,
 			Entity entity, int slot, boolean flag) {
@@ -60,6 +64,12 @@ public final class ItemRemoteBag extends Item {
 		}
 	}
 
+	/**
+	 * NBTからChunkLoadingクラスのインスタンスを取得する
+	 *
+	 * @param nbt
+	 * @return ChunkLoading
+	 */
 	private ChunkLoading getChunkLoading(NBTTagCompound nbt) {
 		ChunkLoading chunkLoader;
 		if ( nbt.hasKey("ChunkID") ) {

@@ -8,10 +8,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import aisuu.com.remoteBag.RemoteBagMod;
 
+/**
+ * チャンクロードのメイン
+ *
+ * NBTにidを記憶させることで、
+ * インスタンスを個別に持たせるみたいな感じ
+ *
+ */
 public class ChunkLoading {
 	public final int id;
 	public int prevSlot;
 	public ForgeChunkManager.Ticket ticket;
+
 	private static Map<Integer, ChunkLoading> instanceMap;
 	static {
 		instanceMap = new HashMap<Integer, ChunkLoading>();
