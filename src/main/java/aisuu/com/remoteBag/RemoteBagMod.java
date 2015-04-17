@@ -93,10 +93,10 @@ public final class RemoteBagMod {
     public void openContainerEvent(PlayerOpenContainerEvent event) {
     	ItemStack currentStack = event.entityPlayer.getCurrentEquippedItem();
     	Container openContainer = event.entityPlayer.openContainer;
-    	NBTTagCompound nbt = currentStack.getTagCompound();
-    	if ( ( openContainer instanceof ContainerChest || openContainer instanceof ContainerIronChest ) &&
-    			currentStack != null && Util.isItemEqual(currentStack.getItem(), itemRemoteBag) && Pos.isSetedPosOnNBT(nbt) ) {
 
+    	if ( ( openContainer instanceof ContainerChest || openContainer instanceof ContainerIronChest ) &&
+    			currentStack != null && Util.isItemEqual(currentStack.getItem(), itemRemoteBag) && Pos.isSetedPosOnNBT(currentStack.getTagCompound()) ) {
+    		NBTTagCompound nbt = currentStack.getTagCompound();
     		Block block = Pos.getPosOnNBT(nbt, event.entityPlayer.worldObj).getBlock();
     		if ( block != null && ( block instanceof BlockChest || block instanceof BlockIronChest ) ) {
     			event.setResult(Result.ALLOW);
