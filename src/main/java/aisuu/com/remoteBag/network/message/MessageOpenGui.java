@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import aisuu.com.remoteBag.RemoteBagMod;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -29,7 +30,7 @@ IMessageHandler<MessageOpenGui, IMessage> {
 
 	@Override
 	public IMessage onMessage(MessageOpenGui message, MessageContext ctx) {
-		if ( ctx.side.isClient() ) {
+		if ( ctx.side.isClient() && RemoteBagMod.isLoadedIronChest ) {
 			Minecraft mc = Minecraft.getMinecraft();
 			EntityClientPlayerMP player = mc.thePlayer;
 			TileEntityIronChest ironchest = null;

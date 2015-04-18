@@ -29,7 +29,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.ironchest.BlockIronChest;
 import cpw.mods.ironchest.ContainerIronChest;
 
-@Mod(modid = RemoteBagMod.MOD_ID, name = "Remote Bag Mod", version = "1.2.0", dependencies = "after:IronChest")
+@Mod(modid = RemoteBagMod.MOD_ID, name = "Remote Bag Mod", version = "1.2.1", dependencies = "after:IronChest")
 public final class RemoteBagMod {
     public static final String MOD_ID = "remote_bag";
 
@@ -40,12 +40,12 @@ public final class RemoteBagMod {
     public static Item remoteBag;
 
     /** IronChestが導入されているか */
-    public static boolean isLoadedIronChest;
+    public static boolean isLoadedIronChest = false;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
     	MinecraftForge.EVENT_BUS.register(this);
-    	PacketHandler.init();
+
 
         remoteEnderBag = new ItemRemoteEnderBag();
         remoteBag = new ItemRemoteBag();
@@ -82,6 +82,9 @@ public final class RemoteBagMod {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         this.isLoadedIronChest = Loader.isModLoaded("IronChest");
+        if ( isLoadedIronChest ) {
+        	PacketHandler.init();
+        }
     }
 
     /**
@@ -95,11 +98,11 @@ public final class RemoteBagMod {
     	ItemStack currentStack = event.entityPlayer.getCurrentEquippedItem();
     	Container openContainer = event.entityPlayer.openContainer;
 
-    	if ( ( openContainer instanceof ContainerChest || openContainer instanceof ContainerIronChest ) &&
+    	if ( ( openContainer instanceof ContainerChest || ( isLoadedIronChest && openContainer instanceof ContainerIronChest ) ) &&
     			currentStack != null && Util.isItemEqual(currentStack.getItem(), remoteBag) && Pos.isSetedPosOnNBT(currentStack.getTagCompound()) ) {
     		NBTTagCompound nbt = currentStack.getTagCompound();
     		Block block = Pos.getPosOnNBT(nbt, event.entityPlayer.worldObj).getBlock();
-    		if ( block != null && ( block instanceof BlockChest || block instanceof BlockIronChest ) ) {
+    		if ( block != null && ( block instanceof BlockChest || ( isLoadedIronChest && block instanceof BlockIronChest ) ) ) {
     			event.setResult(Result.ALLOW);
     		}
     	}
