@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -17,7 +16,6 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import aisuu.com.remoteBag.RemoteBagMod;
-import aisuu.com.remoteBag.chunk.ChunkLoading;
 import aisuu.com.remoteBag.util.Pos;
 import aisuu.com.remoteBag.util.Util;
 import cpw.mods.ironchest.BlockIronChest;
@@ -35,52 +33,6 @@ public final class ItemRemoteBag extends Item {
         this.setCreativeTab(CreativeTabs.tabMisc);
         this.setMaxStackSize( 1 );
     }
-
-    /**
-     * プレイヤーが座標の設定されたアイテムを手に持っている場合
-     * その座標のチャンクをロードさせる処理。上手く読み込んでくれない。
-     */
-    @Override
-    public void onUpdate(ItemStack stack, World world,
-    		Entity entity, int slot, boolean flag) {
-    	if ( world.isRemote && stack != null && entity != null && entity instanceof EntityPlayer ) {
-    		EntityPlayer player = (EntityPlayer)entity;
-    		NBTTagCompound nbt = stack.getTagCompound();
-    		if ( !Pos.isSetedPosOnNBT(nbt) ) {
-    			return ;
-    		}
-
-    		ChunkLoading chunkLoader = getChunkLoading(nbt);
-    		int currentItem = player.inventory.currentItem;
-    		if ( currentItem == ChunkLoading.prevSlot ) {
-    			return ;
-    		}
-    		ChunkLoading.prevSlot = currentItem;
-
-    		if ( currentItem == slot ) {
-    			chunkLoader.startChunkLoading(world, nbt.getInteger(Pos.POS_X), nbt.getInteger(Pos.POS_Z));
-    		} else {
-    			chunkLoader.stopChunkLoading();
-    		}
-    	}
-    }
-
-	/**
-	 * NBTからChunkLoadingクラスのインスタンスを取得する
-	 *
-	 * @param nbt
-	 * @return ChunkLoading
-	 */
-	private ChunkLoading getChunkLoading(NBTTagCompound nbt) {
-		ChunkLoading chunkLoader;
-		if ( nbt.hasKey("ChunkID") ) {
-			chunkLoader = ChunkLoading.getInstance(nbt.getInteger("ChunkID"));
-		} else {
-			chunkLoader = new ChunkLoading();
-		}
-		nbt.setInteger("ChunkID", chunkLoader.id);
-		return chunkLoader;
-	}
 
 	/**
      * 座標が設定されていればアイコンが暗くなる。

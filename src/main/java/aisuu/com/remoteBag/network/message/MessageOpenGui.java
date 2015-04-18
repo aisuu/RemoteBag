@@ -1,17 +1,18 @@
 package aisuu.com.remoteBag.network.message;
 
 import io.netty.buffer.ByteBuf;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.ironchest.IronChestType;
 import cpw.mods.ironchest.TileEntityIronChest;
+import cpw.mods.ironchest.client.GUIChest;
 
 public final class MessageOpenGui implements IMessage,
 IMessageHandler<MessageOpenGui, IMessage> {
@@ -30,18 +31,33 @@ IMessageHandler<MessageOpenGui, IMessage> {
 	public IMessage onMessage(MessageOpenGui message, MessageContext ctx) {
 		if ( ctx.side.isClient() ) {
 			Minecraft mc = Minecraft.getMinecraft();
-
 			EntityClientPlayerMP player = mc.thePlayer;
-			WorldClient world = mc.theWorld;
-			TileEntity ironchest = world.getTileEntity(message.x, message.y, message.z);
-			if ( !(ironchest != null && ironchest instanceof TileEntityIronChest) ) {
-				return null;
+			TileEntityIronChest ironchest = null;
+			try {
+				Constructor<TileEntityIronChest> tileConst = TileEntityIronChest.class.getDeclaredConstructor(IronChestType.class);
+				tileConst.setAccessible(true);
+				ironchest = tileConst.newInstance(IronChestType.values()[message.id]);
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
 			}
+			if ( ironchest != null ) {
+				GUIChest screen = GUIChest.GUI.buildGUI(IronChestType.values()[message.id], player.inventory, ironchest);
 
-			Object c = NetworkRegistry.INSTANCE.getLocalGuiContainer(FMLCommonHandler.instance().findContainerFor("IronChest"), player, message.id, world, message.x, message.y, message.z);
-			if ( c != null && c instanceof GuiScreen ) {
-				mc.displayGuiScreen((GuiScreen) c);
-				player.openContainer.windowId = message.currentWindow;
+				if ( screen != null ) {
+					mc.displayGuiScreen(screen);
+					player.openContainer.windowId = message.currentWindow;
+
+				}
 			}
 		}
 		return null;
@@ -53,6 +69,7 @@ IMessageHandler<MessageOpenGui, IMessage> {
 		this.x = buf.readInt();
 		this.y = buf.readInt();
 		this.z = buf.readInt();
+		this.id = buf.readInt();
 	}
 
 	@Override
@@ -61,6 +78,7 @@ IMessageHandler<MessageOpenGui, IMessage> {
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
+		buf.writeInt(id);
 	}
 
 

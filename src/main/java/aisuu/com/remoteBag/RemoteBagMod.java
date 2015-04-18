@@ -9,10 +9,8 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
-import aisuu.com.remoteBag.chunk.ChunkLoadingCallback;
 import aisuu.com.remoteBag.item.ItemRemoteBag;
 import aisuu.com.remoteBag.item.ItemRemoteEnderBag;
 import aisuu.com.remoteBag.network.PacketHandler;
@@ -47,7 +45,6 @@ public final class RemoteBagMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
     	MinecraftForge.EVENT_BUS.register(this);
-    	ForgeChunkManager.setForcedChunkLoadingCallback(RemoteBagMod.instance, new ChunkLoadingCallback());
     	PacketHandler.init();
 
         remoteEnderBag = new ItemRemoteEnderBag();
