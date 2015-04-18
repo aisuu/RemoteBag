@@ -21,6 +21,7 @@ public final class Pos {
 	public double getDistanceEntity(Entity entity) {
 		return entity.getDistance(x, y, z);
 	}
+
 	public NBTTagCompound getNBT() {
 		return this.getNBT(new NBTTagCompound());
 	}

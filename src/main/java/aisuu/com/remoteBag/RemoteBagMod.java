@@ -30,39 +30,42 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.ironchest.BlockIronChest;
 import cpw.mods.ironchest.ContainerIronChest;
+
 @Mod(modid = RemoteBagMod.MOD_ID, name = "Remote Bag Mod", version = "1.1.2", dependencies = "after:IronChest")
 public final class RemoteBagMod {
     public static final String MOD_ID = "remote_bag";
+
     @Instance(MOD_ID)
     public static RemoteBagMod instance;
-    public static Item itemRemoteEnderBag;
-    public static Item itemRemoteBag;
+
+    public static Item remoteEnderBag;
+    public static Item remoteBag;
 
     /** IronChestが導入されているか */
-    public static boolean isLoadedIronChest = false;
+    public static boolean isLoadedIronChest;
 
     @EventHandler
-    public void preinit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) {
     	MinecraftForge.EVENT_BUS.register(this);
     	ForgeChunkManager.setForcedChunkLoadingCallback(RemoteBagMod.instance, new ChunkLoadingCallback());
     	PacketHandler.init();
-        itemRemoteEnderBag = new ItemRemoteEnderBag();
-        itemRemoteBag = new ItemRemoteBag();
-        GameRegistry.registerItem(itemRemoteEnderBag, "enderremotebag");
-        GameRegistry.registerItem(itemRemoteBag, "remotebag");
+
+        remoteEnderBag = new ItemRemoteEnderBag();
+        remoteBag = new ItemRemoteBag();
+        GameRegistry.registerItem(remoteEnderBag, "enderremotebag");
+        GameRegistry.registerItem(remoteBag, "remotebag");
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-
-        GameRegistry.addRecipe( new ItemStack( itemRemoteEnderBag ),
+        GameRegistry.addRecipe( new ItemStack( remoteEnderBag ),
                 new Object[] {  " # ",
                                 "#$#",
                                 " # ",
                                 Character.valueOf('#'), Items.leather,
                                 Character.valueOf('$'), Blocks.ender_chest } );
 
-        GameRegistry.addRecipe(new ItemStack(itemRemoteBag),
+        GameRegistry.addRecipe(new ItemStack(remoteBag),
                 new Object[] {  " # ",
                                 "$&$",
                                 " $ ",
@@ -71,7 +74,7 @@ public final class RemoteBagMod {
                                 Character.valueOf('$'), Items.leather   } );
 
         // NBT初期化
-        GameRegistry.addShapelessRecipe(new ItemStack(itemRemoteBag), itemRemoteBag);
+        GameRegistry.addShapelessRecipe(new ItemStack(remoteBag), remoteBag);
 
     }
 
@@ -87,15 +90,16 @@ public final class RemoteBagMod {
     /**
      * Guiを開けるかどうかの判定。距離で判定されると困るため。
      *
+     *
      * @param event
      */
     @SubscribeEvent
-    public void openContainerEvent(PlayerOpenContainerEvent event) {
+    public void playerOpenContainer(PlayerOpenContainerEvent event) {
     	ItemStack currentStack = event.entityPlayer.getCurrentEquippedItem();
     	Container openContainer = event.entityPlayer.openContainer;
 
     	if ( ( openContainer instanceof ContainerChest || openContainer instanceof ContainerIronChest ) &&
-    			currentStack != null && Util.isItemEqual(currentStack.getItem(), itemRemoteBag) && Pos.isSetedPosOnNBT(currentStack.getTagCompound()) ) {
+    			currentStack != null && Util.isItemEqual(currentStack.getItem(), remoteBag) && Pos.isSetedPosOnNBT(currentStack.getTagCompound()) ) {
     		NBTTagCompound nbt = currentStack.getTagCompound();
     		Block block = Pos.getPosOnNBT(nbt, event.entityPlayer.worldObj).getBlock();
     		if ( block != null && ( block instanceof BlockChest || block instanceof BlockIronChest ) ) {

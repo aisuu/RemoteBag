@@ -15,19 +15,24 @@ import aisuu.com.remoteBag.RemoteBagMod;
  * インスタンスを個別に持たせるみたいな感じ
  *
  */
-public class ChunkLoading {
-	public final int id;
-	public int prevSlot;
+public final class ChunkLoading {
+	public static int prevSlot;
 	public ForgeChunkManager.Ticket ticket;
 
 	private static Map<Integer, ChunkLoading> instanceMap;
+	public final int id;
+
 	static {
 		instanceMap = new HashMap<Integer, ChunkLoading>();
+		prevSlot = -1;
+	}
+
+	public ChunkLoading() {
+		this(getId());
 	}
 
 	public ChunkLoading(int id) {
 		this.id = id;
-		this.prevSlot = -1;
 		instanceMap.put(this.id, this);
 	}
 
@@ -50,6 +55,8 @@ public class ChunkLoading {
 			i++;
 		}
 	}
+
+
 	public void startChunkLoading(World world, int x, int z) {
 		if ( this.ticket == null ) {
 			ForgeChunkManager.Ticket t = ForgeChunkManager.requestTicket(RemoteBagMod.instance, world, ForgeChunkManager.Type.NORMAL);
@@ -60,6 +67,12 @@ public class ChunkLoading {
 		}
 	}
 
+	/**
+	 * NBTにチャンクの座標とこのインスタンスのIDを記録
+	 *
+	 * @param t
+	 * @param coord
+	 */
 	public void forceChunk(ForgeChunkManager.Ticket t, ChunkCoordIntPair coord) {
 		this.stopChunkLoading();
 		this.ticket = t;

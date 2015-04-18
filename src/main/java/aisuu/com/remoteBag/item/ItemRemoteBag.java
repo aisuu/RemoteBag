@@ -40,29 +40,30 @@ public final class ItemRemoteBag extends Item {
      * プレイヤーが座標の設定されたアイテムを手に持っている場合
      * その座標のチャンクをロードさせる処理。上手く読み込んでくれない。
      */
-	@Override
-	public void onUpdate(ItemStack stack, World world,
-			Entity entity, int slot, boolean flag) {
-		if ( stack != null && entity != null && entity instanceof EntityPlayer ) {
-			EntityPlayer player = (EntityPlayer)entity;
-			NBTTagCompound nbt = stack.getTagCompound();
-			if ( !Pos.isSetedPosOnNBT(nbt) ) {
-				return ;
-			}
+    @Override
+    public void onUpdate(ItemStack stack, World world,
+    		Entity entity, int slot, boolean flag) {
+    	if ( world.isRemote && stack != null && entity != null && entity instanceof EntityPlayer ) {
+    		EntityPlayer player = (EntityPlayer)entity;
+    		NBTTagCompound nbt = stack.getTagCompound();
+    		if ( !Pos.isSetedPosOnNBT(nbt) ) {
+    			return ;
+    		}
 
-			ChunkLoading chunkLoader = getChunkLoading(nbt);
-			int currentItem = player.inventory.currentItem;
-			if ( currentItem == chunkLoader.prevSlot ) {
-				return ;
-			}
-			chunkLoader.prevSlot = currentItem;
-			if ( currentItem == slot ) {
-				chunkLoader.startChunkLoading(world, nbt.getInteger(Pos.POS_X), nbt.getInteger(Pos.POS_Z));
-			} else {
-				chunkLoader.stopChunkLoading();
-			}
-		}
-	}
+    		ChunkLoading chunkLoader = getChunkLoading(nbt);
+    		int currentItem = player.inventory.currentItem;
+    		if ( currentItem == ChunkLoading.prevSlot ) {
+    			return ;
+    		}
+    		ChunkLoading.prevSlot = currentItem;
+
+    		if ( currentItem == slot ) {
+    			chunkLoader.startChunkLoading(world, nbt.getInteger(Pos.POS_X), nbt.getInteger(Pos.POS_Z));
+    		} else {
+    			chunkLoader.stopChunkLoading();
+    		}
+    	}
+    }
 
 	/**
 	 * NBTからChunkLoadingクラスのインスタンスを取得する
@@ -75,7 +76,7 @@ public final class ItemRemoteBag extends Item {
 		if ( nbt.hasKey("ChunkID") ) {
 			chunkLoader = ChunkLoading.getInstance(nbt.getInteger("ChunkID"));
 		} else {
-			chunkLoader = new ChunkLoading(ChunkLoading.getId());
+			chunkLoader = new ChunkLoading();
 		}
 		nbt.setInteger("ChunkID", chunkLoader.id);
 		return chunkLoader;
