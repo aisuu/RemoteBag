@@ -29,7 +29,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.ironchest.BlockIronChest;
 import cpw.mods.ironchest.ContainerIronChest;
 
-@Mod(modid = RemoteBagMod.MOD_ID, name = "Remote Bag Mod", version = "1.1.2", dependencies = "after:IronChest")
+@Mod(modid = RemoteBagMod.MOD_ID, name = "Remote Bag Mod", version = "1.2.0", dependencies = "after:IronChest")
 public final class RemoteBagMod {
     public static final String MOD_ID = "remote_bag";
 
