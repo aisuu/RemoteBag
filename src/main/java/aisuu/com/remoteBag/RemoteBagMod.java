@@ -46,7 +46,6 @@ public final class RemoteBagMod {
     public void preInit(FMLPreInitializationEvent event) {
     	MinecraftForge.EVENT_BUS.register(this);
 
-
         remoteEnderBag = new ItemRemoteEnderBag();
         remoteBag = new ItemRemoteBag();
         GameRegistry.registerItem(remoteEnderBag, "enderremotebag");
@@ -81,8 +80,8 @@ public final class RemoteBagMod {
      */
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        this.isLoadedIronChest = Loader.isModLoaded("IronChest");
-        if ( isLoadedIronChest ) {
+        if ( Loader.isModLoaded("IronChest") ) {
+        	this.isLoadedIronChest = true;
         	PacketHandler.init();
         }
     }
@@ -98,11 +97,13 @@ public final class RemoteBagMod {
     	ItemStack currentStack = event.entityPlayer.getCurrentEquippedItem();
     	Container openContainer = event.entityPlayer.openContainer;
 
-    	if ( ( openContainer instanceof ContainerChest || ( isLoadedIronChest && openContainer instanceof ContainerIronChest ) ) &&
-    			currentStack != null && Util.isItemEqual(currentStack.getItem(), remoteBag) && Pos.isSetedPosOnNBT(currentStack.getTagCompound()) ) {
+    	if ( currentStack != null && Util.isItemEqual(currentStack.getItem(), remoteBag) && Pos.isSetedPosOnNBT(currentStack.getTagCompound()) ) {
     		NBTTagCompound nbt = currentStack.getTagCompound();
     		Block block = Pos.getPosOnNBT(nbt, event.entityPlayer.worldObj).getBlock();
-    		if ( block != null && ( block instanceof BlockChest || ( isLoadedIronChest && block instanceof BlockIronChest ) ) ) {
+
+    		if ( openContainer instanceof ContainerChest && block instanceof BlockChest ) {
+    			event.setResult(Result.ALLOW);
+    		} else if ( isLoadedIronChest && ( openContainer instanceof ContainerIronChest && block instanceof BlockIronChest ) ) {
     			event.setResult(Result.ALLOW);
     		}
     	}
