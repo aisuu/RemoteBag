@@ -3,10 +3,11 @@ package aisuu.com.remoteBag.util;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import aisuu.com.remoteBag.network.PacketHandler;
-import aisuu.com.remoteBag.network.message.MessageOpenGui;
+import aisuu.com.remoteBag.RemoteBagMod;
+import aisuu.com.remoteBag.network.MessageOpenGui;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
@@ -29,9 +30,10 @@ public final class Util {
         {
             player.closeScreen();
         }
-
         player.getNextWindowId();
-        PacketHandler.INSTANCE.sendTo(new MessageOpenGui( player.currentWindowId, pos.getX(), pos.getY(), pos.getZ(), ID), player);
+        NBTTagCompound nbt = new NBTTagCompound();
+        pos.getTileEntity().writeToNBT(nbt);
+        RemoteBagMod.instance.sendTo(new MessageOpenGui( player.currentWindowId, ID, nbt), player);
         player.openContainer = NetworkRegistry.INSTANCE.getRemoteGuiContainer(FMLCommonHandler.instance().findContainerFor("IronChest"), player, ID, world, pos.getX(), pos.getY(), pos.getZ());
         player.openContainer.windowId = player.currentWindowId;
         player.openContainer.addCraftingToCrafters(player);
@@ -41,7 +43,7 @@ public final class Util {
 		return tile.xCoord == pos.getX() && tile.yCoord == pos.getY() && tile.zCoord == pos.getZ();
 	}
 
-	private static void writeString(String str, ByteBuf buf) {
+	public static void writeString(String str, ByteBuf buf) {
 		char[] c = str.toCharArray();
 		buf.writeInt(c.length);
 		for ( char ch : c) {
@@ -49,7 +51,7 @@ public final class Util {
 		}
 	}
 
-	private static String readString(ByteBuf buf) {
+	public static String readString(ByteBuf buf) {
 		int length = buf.readInt();
 		char[] chars = new char[length];
 		for ( int i = 0; i < length; i++ ) {

@@ -57,14 +57,12 @@ public final class ItemRemoteBag extends Item {
         }
 
         NBTTagCompound nbt = stack.getTagCompound();
-        if ( nbt == null ) {
-            nbt = new NBTTagCompound();
-            stack.setTagCompound( nbt );
-        } else if ( Pos.isSetedPosOnNBT( nbt ) ) {
-            return true;
-        } else if ( nbt.hasKey( Pos.POS_X ) || nbt.hasKey( Pos.POS_Y ) || nbt.hasKey( Pos.POS_Z ) || nbt.hasKey(Pos.DIMENSION) ) {
-            nbt = new NBTTagCompound();
-            stack.setTagCompound( nbt );
+        if ( Pos.isSetedPosOnNBT(nbt) ) {
+        	this.onItemRightClick(stack, worldIn, playerIn);
+        } else if ( nbt == null ) {
+        	nbt = new NBTTagCompound();
+        } else if (nbt.hasKey( Pos.POS_X ) || nbt.hasKey( Pos.POS_Y ) || nbt.hasKey( Pos.POS_Z ) || nbt.hasKey(Pos.DIMENSION)) {
+        	nbt = new NBTTagCompound();
         }
 
         Block state = worldIn.getBlock(x, y, z);
@@ -93,7 +91,7 @@ public final class ItemRemoteBag extends Item {
     			}
 
 
-    			if ( RemoteBagMod.isLoadedIronChest && block instanceof BlockIronChest && tile instanceof TileEntityIronChest ) {
+    			if ( RemoteBagMod.isLoadedIronChest && ( block instanceof BlockIronChest && tile instanceof TileEntityIronChest ) ) {
     				TileEntityIronChest chest = ((TileEntityIronChest)tile);
     				if ( playerIn instanceof EntityPlayerMP ) {
     					Util.openGui( chest.getType().ordinal(), ((EntityPlayerMP)playerIn), worldIn, pos);
@@ -117,10 +115,10 @@ public final class ItemRemoteBag extends Item {
             int x = nbt.getInteger( Pos.POS_X );
             int y = nbt.getInteger( Pos.POS_Y );
             int z = nbt.getInteger( Pos.POS_Z );
-            int dimID = nbt.getInteger(Pos.DIMENSION);
+            int dimID = nbt.getInteger( Pos.DIMENSION );
 
-            tooltip.add(WorldProvider.getProviderForDimension(dimID).getDimensionName());
-            tooltip.add("[ X : " + x + ", Y : " + y + ", Z : " + z + "]");
+            tooltip.add( WorldProvider.getProviderForDimension(dimID).getDimensionName());
+            tooltip.add( x + " : " + y + " : " + z );
         }
 
     }

@@ -1,36 +1,51 @@
-package aisuu.com.remoteBag.network.message;
+package aisuu.com.remoteBag.network;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import aisuu.com.remoteBag.RemoteBagMod;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.nbt.NBTTagCompound;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.ironchest.IronChestType;
 import cpw.mods.ironchest.TileEntityIronChest;
 import cpw.mods.ironchest.client.GUIChest;
 
-public final class MessageOpenGui implements IMessage,
-IMessageHandler<MessageOpenGui, IMessage> {
-	public int currentWindow, x, y, z, id;
+public class MessageOpenGui implements IPacket {
+	public int currentWindow, id;
+	public NBTTagCompound nbt;
 	public MessageOpenGui() { }
 
-	public MessageOpenGui(int currentWindowId, int x, int y, int z, int id) {
-		this.currentWindow = currentWindowId;
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public MessageOpenGui(int currentWindow, int id, NBTTagCompound nbt) {
+		this.currentWindow = currentWindow;
 		this.id = id;
+		this.nbt = nbt;
 	}
 
 	@Override
-	public IMessage onMessage(MessageOpenGui message, MessageContext ctx) {
-		if ( ctx.side.isClient() && RemoteBagMod.isLoadedIronChest ) {
+	public void readBytes(ByteBuf buf) {
+		this.id = buf.readInt();
+		this.currentWindow = buf.readInt();
+		this.nbt = ByteBufUtils.readTag(buf);
+	}
+
+	@Override
+	public void writeBytes(ByteBuf buf) {
+		buf.writeInt(id);
+		buf.writeInt(currentWindow);
+		ByteBufUtils.writeTag(buf, nbt);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void onMessage(MessageOpenGui message, ChannelHandlerContext ctx) {
+		if ( FMLCommonHandler.instance().getSide().isClient() ) {
+
 			Minecraft mc = Minecraft.getMinecraft();
 			EntityClientPlayerMP player = mc.thePlayer;
 			TileEntityIronChest ironchest = null;
@@ -52,6 +67,8 @@ IMessageHandler<MessageOpenGui, IMessage> {
 				e.printStackTrace();
 			}
 			if ( ironchest != null ) {
+				ironchest.setWorldObj(mc.theWorld);
+				ironchest.readFromNBT(message.nbt);
 				GUIChest screen = GUIChest.GUI.buildGUI(IronChestType.values()[message.id], player.inventory, ironchest);
 
 				if ( screen != null ) {
@@ -61,27 +78,5 @@ IMessageHandler<MessageOpenGui, IMessage> {
 				}
 			}
 		}
-		return null;
 	}
-
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		this.currentWindow = buf.readInt();
-		this.x = buf.readInt();
-		this.y = buf.readInt();
-		this.z = buf.readInt();
-		this.id = buf.readInt();
-	}
-
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(currentWindow);
-		buf.writeInt(x);
-		buf.writeInt(y);
-		buf.writeInt(z);
-		buf.writeInt(id);
-	}
-
-
-
 }
